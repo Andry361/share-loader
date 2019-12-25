@@ -65,13 +65,12 @@ module.exports.pitch = function (remainingRequest) {
     request = request[request.length - 1].replace(/^@/i, '').replace(/\//g, '.');
     globalVar = `${this.query.namespace.replace(/^\?/i, '')}.${request}`;
   } else { //Use modules from parent app
-    request = request[request.length - 1].replace(/\.\.\//g, '').replace(/\.\//g, '').replace(/\//g, '.');
+    request = request[request.length - 1].replace(/^@/i, '').replace(/\.\.\//g, '').replace(/\.\//g, '').replace(/\//g, '.');
     globalVar = `${this.query.namespace}.${request}`;
   }
   
   this._module.userRequest = this._module.userRequest + '-shared';
-  return accesorString(globalVar) + " = " +
-    "Object.assign(" + propertyString(globalVar) + " || {}, require(" + JSON.stringify("-!" + newRequestPath) + "));";
+  return accesorString(globalVar) + " = require(" + JSON.stringify("-!" + newRequestPath) + ")";
 };
 
 module.exports.Externals = function (options) {
